@@ -1,4 +1,4 @@
-# ASE/GPAW with Python 2
+# Ase-Anharmonics
 
 This is an anaconda (python 2.7*) image that is intended to run [ase-anharmonics](https://github.com/keldLundgaard/ase-anharmonics) has installed the following:
 
