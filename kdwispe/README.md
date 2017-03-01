@@ -25,7 +25,7 @@ Or you can create a Github repo with the Singularity file at the base, and conne
     -/share/PI
     -/scratch-local
 
-A demo of the steps to generate the container, and the installation, is [available here]() and the [asciinema file](asciinema-example.json) provided in this folder.
+A demo of the steps to generate the container, and the installation, is [available here](https://asciinema.org/a/105097?speed=3) and the [asciinema file](asciinema-example.json) provided in this folder.
 
 ## Runscript
 
