@@ -10,6 +10,7 @@ This is an anaconda (python 2.7*) image that is intended to run [ase-anharmonics
       scipy-0.18.1    /opt/conda/lib/python2.7/site-packages/scipy/
       gpaw
 
+
 And includes libraries for LAPACK, BLAS, etc (see [Singularity](Singularity) for complete installation steps. We start with a base image that has anaconda (python 2) which means a debian OS. 
 
 ## Image Generation
