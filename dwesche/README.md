@@ -26,7 +26,7 @@ The image can be run like an executable. When you run it, it's going to run what
 (The above commands are equivalent). You can also send a custom command to the image like this:
 
 
-      singularity exec peanuts.img ls /
+      singularity exec anaconda2.img ls /
 
 
 Notice that we are using `exec` to send a command directly to the container. 
