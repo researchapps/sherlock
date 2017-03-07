@@ -15,7 +15,8 @@ From: rocker/r-base
    apt-get update && apt-get install -y build-essential git vim wget \
                                         libcurl4-gnutls-dev \
                                         libssl-dev \
-                                        libxml2-dev
+                                        libxml2-dev \ 
+                                        libcairo2-dev 
 
    wget https://github.com/jgm/pandoc/releases/download/1.19.2/pandoc-1.19.2-1-amd64.deb
    dpkg -i pandoc-1.19.2-1-amd64.deb
