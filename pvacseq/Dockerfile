@@ -27,3 +27,4 @@ RUN pip install --upgrade pip
 RUN pip install scif
 ADD pvacseq.scif /pvacseq.scif
 RUN /opt/conda/bin/scif install /pvacseq.scif
+ENTRYPOINT ["scif"]

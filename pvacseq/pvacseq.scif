@@ -22,7 +22,7 @@
 
     # Paths for tests are wrong
     sed -i 's#tests/test_data/pvacseq/#/scif/data/pvacseq/example_data/#g' /scif/data/pvacseq/example_data/additional_input_file_list.yaml
-    source deactivate
+    /bin/bash -c "source deactivate"
     
 %apprun pvacseq
     source activate /scif/apps/pvacseq
@@ -48,7 +48,7 @@
     /bin/bash -c "source activate /scif/apps/pvacseq"
     pip install pvactools
     pvactools download_cwls /scif/data/pvacqseq
-    source deactivate
+    /bin/bash -c "source deactivate"
 
 #
 # # Variant Effect Predictor (VEP) Command Line Tool
@@ -63,6 +63,7 @@
     apt-get install -y cpanminus
     export PERL_MM_USE_DEFAULT=1
     cpan App::cpanminus
+    cpanm Archive::Zip
     cpanm BioPerl
     cpanm DBI
     cpanm DBD::mysql
@@ -72,28 +73,30 @@
     cd ensembl-vep
     perl INSTALL.pl -a a --NO_TEST
     cpanm Bio::Root::Version
-    cpanm Archive::Zip
 
     # VEP_plugins (all of them!)
     perl INSTALL.pl -a p -g Downstream,miRNA
+    /bin/bash -c "source deactivate"
 
  
 %appinstall VEP_plugins
+    /bin/bash -c "source activate /scif/apps/pvacseq"
     cd ..
     git clone https://github.com/Ensembl/VEP_plugins.git && cd VEP_plugins
     pvacseq install_vep_plugin ${SCIF_APPROOT}  
+    /bin/bash -c "source deactivate"
 
 #
 # # MHC Class I
 # 
 
 %appinstall mhc_i
-    source activate /scif/apps/python2
+    /bin/bash -c "source activate /scif/apps/python2"
     wget http://downloads.iedb.org/tools/mhci/LATEST/IEDB_MHC_I-2.17.tar.gz && \
     tar -xzf IEDB_MHC_I-2.17.tar.gz && mv mhc_i/* $SCIF_APPROOT && rmdir mhc_i
     ./configure && \
     python src/predict_binding.py
-    source deactivate
+    /bin/bash -c "source deactivate"
 
 %apprun mhc_i
     python "$@"
@@ -107,7 +110,7 @@
 # 
 
 %appinstall mhc_ii
-    source activate /scif/apps/python2
+    /bin/bash -c "source activate /scif/apps/python2"
     wget http://downloads.iedb.org/tools/mhcii/LATEST/IEDB_MHC_II-2.17.3.tar.gz && \
     tar -xzf IEDB_MHC_II-2.17.3.tar.gz && mv mhc_ii/* $SCIF_APPROOT && rmdir mhc_ii
     python configure.py

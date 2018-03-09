@@ -2,12 +2,19 @@
 
 This is a repository for container build files to help users of Sherlock. If you are a user and need help, please submit an issue and we will help you build a container! When you are happy with your container, we recommend that you add the `Singularity` or `Dockerfile` file to a new repo, and build automatically with [Singularity Hub](https://singularity-hub.org) or [Docker Hub](https://hub.docker.com/). Generally, your workflow will look like the following:
 
+ - Install Singularity and/or Docker to work locally
  - Ask for help via an [issue](https://www.github.com/researchapps/sherlock/issues) if you don't know how to start
- - Create a build specification file, a text file called Singularity, for your software needs. You can start with another user's as an example.
+ - Create a build specification file, a text file called Singularity, for your software needs. You can start with another user's as an example. You can also start with a Dockerfile, and then pull it to a Singularity image from Docker Hub.
  - Ask for help with your file! This is what this repo is here for. You can submit issues with questions, and we will discuss and work together on the issues.
  - Test your build locally. 
 
-This usually looks something like the following:
+## Installation
+You should first [install Singularity](https://singularityware.github.io/install-linux) and [Docker](https://docs.docker.com/install/) so that you can build images on your host. If you use a Mac, you will need to install Singularity in a virtual machine like Vagrant. Singularity is going to allow us to interact exactly the same, but with an image that we can use on Sherlock! The biggest difference is that a Singularity image is a read online, single file (a format called squasfs so
+it is compressed) that we can physically move around and execute like a script.
+
+
+## General Usage
+On your local machine, building usually looks something like the following:
 
 
       sudo singularity build mynewimage.img Singularity
