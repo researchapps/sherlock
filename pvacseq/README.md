@@ -152,8 +152,26 @@ the cluster) we will show how to do it there.
 If you want an interactive shell to have the python environment active to play around, you can do:
 
 ```
-docker run -it vanessa/pvacseq shell pvacseq
-#
+docker run -it vanessa/sherlock:pvacseq shell pvacseq
+[pvacseq] executing /bin/bash 
+root@be61d6e684ab:/scif/apps/pvacseq# 
+```
+
+Since we are running the container in the context of `pvacseq`, the environment has a bunch of variables for the
+scientific filesystem that give hints that it is active. For exanple, `$SCIF_APPDATA` refers to the data root
+for `pvacseq`, and `$SCIF_APPROOT` for where things are installed. Here we can find the example data:
+
+```
+$ ls $SCIF_APPDATA/example_data/
+MHC_Class_I   additional_input_file_list.yaml  indels.bam_readcount  isoforms.fpkm_tracking
+MHC_Class_II  genes.fpkm_tracking	       input.vcf	     snvs.bam_readcount
+```
+
+Here are the CWL examples:
+
+```
+$ ls $SCIF_APPDATA/pvactools_cwls/
+pvacfuse.cwl  pvacseq.cwl  pvacvector.cwl
 ```
 
 You should have the mindset that you are developing a reproducible container to carry forward your work. In the 
@@ -168,6 +186,14 @@ you might take the following approach:
 And you shouldn't worry about the steps being hard, you have support and help all along the way. Anything you need help with you can email
 Research Computing (@vsoch) or [open an issue](https://www.github.com/researchapps/sherlock/issues).
 
+
+#### Try out cwl
+We have downloaded the cwl examples to `/scif/data/pvacseq` so after you shell in as shown above you can find them:
+
+```
+docker run -it vanessa/sherlock:pvacseq shell pvacseq
+ls $SCIF_APPDATA
+```
 
 ### Singularity
 Singularity is going to allow us to interact exactly the same, but with an image that we can use on Sherlock!

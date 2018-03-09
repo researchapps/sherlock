@@ -67,7 +67,7 @@
 %appinstall pvactools
     /bin/bash -c "source activate /scif/apps/pvacseq"
     pip install pvactools
-    pvactools download_cwls /scif/data/pvacqseq
+    cd /scif/data/pvacseq && pvactools download_cwls $PWD
     /bin/bash -c "source deactivate"
 
 #
