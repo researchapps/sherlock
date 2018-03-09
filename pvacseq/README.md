@@ -27,11 +27,10 @@ Note that you don't need to build the container on your own, because we have it 
 docker build -t vanessa/sherlock:pvacseq .
 ```
 
-## Interaction
-Here we will show quick interaction with the container, using Docker and Singularity. The example we will run
+Next we will show quick interaction with the container, using Docker and Singularity. The example we will run
 is [here](http://pvactools.readthedocs.io/en/latest/pvacseq/getting_started.html).
 
-### Docker
+## Docker Interaction
 You can build the container above, or pull the one provided on Docker Hub. To run the example, we have a scif app for it. First, read about the [scientific filesystem](https://sci-f.github.io) if you are interested. Generally, it's a way to create internal modularity in a container by way of creating separate groups (internal modules called "SCIF apps") of environments and entrypoints. To see the apps installed in the container, you can run:
 
 
@@ -53,7 +52,7 @@ Since we need a python 2 installation for the older dependencies, the module `py
 the dependencies, or encourage you to use different bases for your work. You can put stinky socks in a container, but they are still stinky socks :)
 
 
-#### Run the Test Example
+### Run the Test Example
 Specifically, the `pvacseq-test` application will run [the example here](http://pvactools.readthedocs.io/en/latest/pvacseq/getting_started.html).
 To run the example provided in the above (note that the example data and test files are installed in the container under `/scif/data`), with Docker you can do:
 
@@ -147,8 +146,7 @@ we map the folder referenced (`/scif/data/pvacseq/test_output`) to our local mac
 option (meaning volume in Docker) but since this is easier to do with Singularity (and how you will need to do it on
 the cluster) we will show how to do it there.
 
-
-#### Interact with the Software
+### Interact with the Software
 If you want an interactive shell to have the python environment active to play around, you can do:
 
 ```
@@ -174,7 +172,47 @@ $ ls $SCIF_APPDATA/pvactools_cwls/
 pvacfuse.cwl  pvacseq.cwl  pvacvector.cwl
 ```
 
-You should have the mindset that you are developing a reproducible container to carry forward your work. In the 
+Note that looking at the files, these are intended to be run OUTSIDE the container. You aren't going to be able
+to use Singularity with CWL (it doesn't conform to the required specification) so I wouldn't take this approach.
+
+### Run the MHC_I and MHC_II tests
+For each, shell in with the correct context, and then issue the test commands.
+
+From outside the container:
+
+```
+docker run -it vanessa/sherlock:pvacseq run mhc_i
+docker run -it vanessa/sherlock:pvacseq run mhc_ii
+```
+
+Or inside the container, this is what is going on, for mhc_i
+
+```
+docker run -it vanessa/sherlock:pvacseq shell mhc_i
+[mhc_i] executing /bin/bash 
+root@ce802c0329f8:/scif/apps/mhc_i# source activate /scif/apps/python2
+(/scif/apps/python2) root@ce802c0329f8:/scif/apps/mhc_i# python src/predict_binding.py
+```
+
+and mhc_ii
+
+```
+docker run -it vanessa/sherlock:pvacseq shell mhc_ii
+[mhc_ii] executing /bin/bash 
+root@22133735d61c:/scif/apps/mhc_ii# source activate /scif/apps/python2
+(/scif/apps/python2) root@22133735d61c:/scif/apps/mhc_ii# python configure.py 
+All prerequisites found!
+run MHCII tests...
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 7.986s
+
+OK
+(/scif/apps/python2) root@22133735d61c:/scif/apps/mhc_ii# 
+```
+
+Now you are empowered to use these tools for your analysis! You should have the mindset that you are 
+developing a reproducible container to carry forward your work. In the 
 same way that you were able to run the test above with one easy command, this is what you would want to provide
 to your users! This is the container that you might publish with your paper to reproduce your analayis. This  means that
 you might take the following approach:
@@ -186,14 +224,6 @@ you might take the following approach:
 And you shouldn't worry about the steps being hard, you have support and help all along the way. Anything you need help with you can email
 Research Computing (@vsoch) or [open an issue](https://www.github.com/researchapps/sherlock/issues).
 
-
-#### Try out cwl
-We have downloaded the cwl examples to `/scif/data/pvacseq` so after you shell in as shown above you can find them:
-
-```
-docker run -it vanessa/sherlock:pvacseq shell pvacseq
-ls $SCIF_APPDATA
-```
 
 ### Singularity
 Singularity is going to allow us to interact exactly the same, but with an image that we can use on Sherlock!

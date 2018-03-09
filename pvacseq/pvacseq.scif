@@ -23,6 +23,7 @@
     /opt/conda/bin/conda create -y -p $SCIF_APPROOT python=3.6
     /bin/bash -c "source activate /scif/apps/pvacseq"
     pip install pvacseq
+    pip install cwl
     pvacseq download_example_data $SCIF_APPDATA
     mkdir -p $SCIF_APPDATA/test_output
 
@@ -119,7 +120,8 @@
     /bin/bash -c "source deactivate"
 
 %apprun mhc_i
-    python "$@"
+    source activate /scif/apps/python2
+    python src/predict_binding.py "$@"
     source deactivate
 
 %appenv mhc_i
@@ -134,3 +136,11 @@
     wget http://downloads.iedb.org/tools/mhcii/LATEST/IEDB_MHC_II-2.17.3.tar.gz && \
     tar -xzf IEDB_MHC_II-2.17.3.tar.gz && mv mhc_ii/* $SCIF_APPROOT && rmdir mhc_ii
     python configure.py
+
+%apprun mhc_ii
+    source activate /scif/apps/python2
+    if [ $# -eq 0 ]; then
+        python configure.py
+    else
+        python "$@" 
+    fi
