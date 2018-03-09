@@ -13,6 +13,12 @@
 # # pvacseq
 #
 
+%apphelp pvacseq
+    This is the primary entrypoint for interaction with the container tools!
+    You can interactively shell in like:
+        singularity run pvacseq shell pvacseq
+        docker run -it vanessa/sherlock:pvacseq shell pvacseq
+
 %appinstall pvacseq
     /opt/conda/bin/conda create -y -p $SCIF_APPROOT python=3.6
     /bin/bash -c "source activate /scif/apps/pvacseq"
@@ -29,10 +35,24 @@
     python "$@"
     source deactivate
 
+%apphelp pvacseq-test
+    You should run this application with an output directory to see the
+    output files.
+       singularity run pvacseq run pvacseq-test /scratch/users/vsochat/output
+
+
 %apprun pvacseq-test
     /bin/bash -c "source activate /scif/apps/pvacseq"
+
+    # If no arguments provided, use default data output
+    if [ $# -eq 0 ]; then
+        OUTDIR=/scif/data/pvacseq/test_output
+    else
+        OUTDIR="$1"
+    fi
+
     pvacseq run /scif/data/pvacseq/example_data/input.vcf Test HLA-G*01:09,HLA-E*01:01,H2-IAb \
-            NetMHC PickPocket NNalign /scif/data/pvacseq/test_output \
+            NetMHC PickPocket NNalign $OUTDIR \
             -e 9,10 \
             -i /scif/data/pvacseq/example_data/additional_input_file_list.yaml --tdna-vaf 20 \
             --net-chop-method cterm --netmhc-stab \

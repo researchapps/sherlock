@@ -143,13 +143,10 @@ If we didn't add the `-it` (it means interactive terminal) we wouldn't see the o
 #### Where is my Data?
 
 Notice how the output is referenced inside the container? That sucks. We can generate the output on our host if 
-we map the folder referenced (`/scif/data/pvacseq/test_output`) to our local machine. The `-v` means volume.
+we map the folder referenced (`/scif/data/pvacseq/test_output`) to our local machine. You can do this with The `-v` 
+option (meaning volume in Docker) but since this is easier to do with Singularity (and how you will need to do it on
+the cluster) we will show how to do it there.
 
-```
-mkdir -p /tmp/test_output
-docker run -it -v /scif/data/pvacseq/test_output:/tmp/test_output vanessa/sherlock:pvacseq run pvacseq-test
-ls /tmp/test_output
-```
 
 #### Interact with the Software
 If you want an interactive shell to have the python environment active to play around, you can do:
