@@ -304,12 +304,121 @@ The biggest difference is that a Singularity image is a read online, single file
 it is compressed) that we can physically move around and execute like a script. This first example will show
 running the Singularity image on our laptops. We will then move to Sherlock.
 
+First, pull the image. You obviously need Singularity installed, see the [README](../README.md) if you didn't
+do this yet.
+
+```
+singularity pull --name pvacseq docker://vanessa/sherlock:pvacseq
+```
+
+Interaction is the same! Here are our apps:
+
+```
+./pvacseq apps
+       VEP
+VEP_plugins
+     mhc_i
+    mhc_ii
+   pvacseq
+pvacseq-test
+ pvactools
+   python2
+```
+
+Run the tests. Since the container is read only, we MUST bind to the host!
+
+```
+mkdir -p /tmp/test_output
+singularity run --bind /tmp/test_output:/scif/data/pvacseq/test_output pvacseq run pvacseq-test
+```
+
+and now you can actually look at it!
+
+```
+$ ls /tmp/test_output
+MHC_Class_I  MHC_Class_II
+```
+
+Interact with the Software
+
+```
+./pvacseq shell pvacseq
+$ ls $SCIF_APPDATA
+example_data  pvactools_cwls  test_output
+exit
+```
+
+Run the MHC_I and MHC_II tests, first from outside the container:
+
+```
+./pvacseq run mhc_i
+```
+```
+./pvacseq run mhc_ii
+```
+
+Pass custom commands
+
+```
+ ./pvacseq exec mhc_ii ls
+[mhc_ii] executing /bin/ls 
+Copenhagen_license.txt
+IEDB_MHC_II-2.17.3.tar.gz
+LIAI_license.txt
+README
+bin
+bio.py
+configure.py
+lib
+logs
+methods
+mhc_II_binding.py
+mhc_II_binding.py.temp
+mhcii_predictor.py
+netMHCII-1.1.readme
+scif
+scratch
+seqpredictorII.py
+test.fasta
+```
+
+And interactive environments
+
+```
+./pvacseq shell mhc_i
+source activate /scif/apps/python2
+python src/predict_binding.py
+exit
+```
+
+also with mhc_ii
+
+```
+./pvacseq shell mhc_ii
+[mhc_ii] executing /bin/bash 
+vanessa@vanessa-ThinkPad-T460s:/scif/apps/mhc_ii$ source activate /scif/apps/python2
+(/scif/apps/python2) vanessa@vanessa-ThinkPad-T460s:/scif/apps/mhc_ii$ python configure.py 
+All prerequisites found!
+run MHCII tests...
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 8.871s
+
+OK
+(/scif/apps/python2) vanessa@vanessa-ThinkPad-T460s:/scif/apps/mhc_ii$ 
+```
+
 
 ### Singularity on Sherlock
+The commands to pull and interact with the image should be the same, and remember that
+you will already have `/scratch` and your user home mounted to the container automatically (and
+can assume the paths are automatically created / exist in the container to interact with).
+All you need to do, then, is load the Singularity module first:
 
 ```
 module load system
 module load singularity/2.4
 ```
 
-**being written**
+And then proceed. Again, it's recommended to bring the container onto Sherlock
+after local development and testing.
