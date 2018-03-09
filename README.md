@@ -1,6 +1,6 @@
-# Sherlock Singularity
+# Sherlock
 
-This is a repository for Singularity image build files to help users of Sherlock build [Singularity](http://singularity.lbl.gov). If you are a user and need help, please submit an issue and we will help you build a container! When you are happy with your container, we recommend that you add the `Singularity` file to a new repo, and build automatically with [Singularity Hub](https://singularity-hub.org). Generally, your workflow will look like the following:
+This is a repository for container build files to help users of Sherlock. If you are a user and need help, please submit an issue and we will help you build a container! When you are happy with your container, we recommend that you add the `Singularity` or `Dockerfile` file to a new repo, and build automatically with [Singularity Hub](https://singularity-hub.org) or [Docker Hub](https://hub.docker.com/). Generally, your workflow will look like the following:
 
  - Ask for help via an [issue](https://www.github.com/researchapps/sherlock/issues) if you don't know how to start
  - Create a build specification file, a text file called Singularity, for your software needs. You can start with another user's as an example.
@@ -10,8 +10,7 @@ This is a repository for Singularity image build files to help users of Sherlock
 This usually looks something like the following:
 
 
-      singularity create --size 4000 mynewimage.img
-      singularity bootstrap mynewimage.img Singularity
+      sudo singularity build mynewimage.img Singularity
       
 
 If it has a runscript, you can run as follows:
@@ -30,5 +29,6 @@ You can also (on your local machine) use the `--writable` option to test install
 
 Note to Sherlock users: this functionality is not yet added to Sherlock, but will be available upon the next release of Singularity in March. For now, you can upload images the old school way (FTP). When this is enabled, you will be able to push the build file to Github, and then link your repo to Singularity Hub. Then using the image on sherlock will come down to:
 
-      module load singularity
+      module load system
+      module load singularity/2.4
       singularity run shub://reponame/mynewimage
