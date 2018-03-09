@@ -1,0 +1,109 @@
+#
+# # python2
+#
+
+%appenv python2
+    /bin/bash -c "source activate /scif/apps/python2"
+
+%appinstall python2
+    /opt/conda/bin/conda create -y -p $SCIF_APPROOT python=2.7
+
+
+#
+# # pvacseq
+#
+
+%appinstall pvacseq
+    /opt/conda/bin/conda create -y -p $SCIF_APPROOT python=3.6
+    /bin/bash -c "source activate /scif/apps/pvacseq"
+    pip install pvacseq
+    pvacseq download_example_data $SCIF_APPDATA
+    
+%apprun pvacseq
+    source activate /scif/apps/pvacseq
+    source deactivate
+
+
+#
+# # PVAC-Tools 
+# http://pvactools.readthedocs.io/en/latest/install.html
+#
+
+%appinstall pvactools
+    /bin/bash -c "source activate /scif/apps/pvacseq"
+    #pvactools download_cwls
+
+
+
+#
+# # Variant Effect Predictor (VEP) Command Line Tool
+#
+
+%appinstall VEP
+    /bin/bash -c "source activate /scif/apps/pvacseq"
+    curl -L http://cpanmin.us | perl - App::cpanminus
+    cpanm Term::ReadLine::Perl Inline Astro::FITS::Header ExtUtils::F77
+    cpanm Bio::Root::Version
+    cpanm DBI
+    cpanm DBD::mysql
+    cpanm Archive::Zip
+
+    git clone https://github.com/Ensembl/VEP_plugins.git
+    git clone https://github.com/Ensembl/ensembl-vep.git
+    cd ensembl-vep
+    perl INSTALL.pl a
+    perl INSTALL.pl -a a
+
+    # VEP_plugins (all of them!)
+    perl INSTALL.pl -a p -g Downstream,miRNA
+    pvacseq install_vep_plugin ${SCIF_APPROOT}/VEP_plugins
+
+ 
+
+#
+# # MHC Class I
+# 
+
+%appinstall mhc_i
+    source activate /scif/apps/python2
+    wget http://downloads.iedb.org/tools/mhci/LATEST/IEDB_MHC_I-2.17.tar.gz && \
+    tar -xzf IEDB_MHC_I-2.17.tar.gz && cd mhc_i && ./configure && \
+    python src/predict_binding.py
+    source deactivate
+
+%apprun mhc_i
+    python "$@"
+    source deactivate
+
+%appenv mhc_i
+    source activate /scif/apps/python2
+
+
+#
+# # MHC Class II
+# 
+
+%appinstall mhc_ii
+    source activate /scif/apps/python2    
+    wget http://downloads.iedb.org/tools/mhcii/LATEST/IEDB_MHC_II-2.17.3.tar.gz && \
+    tar -xzf IEDB_MHC_II-2.17.3.tar.gz && cd mhc_ii
+
+#RUN PATH=/usr/bin wget https://bootstrap.pypa.io/ez_setup.py -O - | /usr/bin/python
+#WORKDIR mhc_ii
+# RUN PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /usr/bin/python2.7 configure.py
+
+
+#
+# # Download Example Data
+# 
+
+# RUN pvacseq download_example_data /
+# RUN mkdir -p /test_output
+
+# NOTE: this is not just path issues, the example data needs to be in right spot
+#RUN pvacseq run /pvacseq_example_data/input.vcf Test HLA-G*01:09,HLA-E*01:01,H2-IAb \
+#                NetMHC PickPocket NNalign /test_output \
+#                -e 9,10 \
+#                -i /pvacseq_example_data/additional_input_file_list.yaml --tdna-vaf 20 \
+#                --net-chop-method cterm --netmhc-stab \
+#                --top-score-metric=lowest -d full --keep-tmp-files
