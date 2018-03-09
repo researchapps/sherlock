@@ -147,7 +147,7 @@ option (meaning volume in Docker) but since this is easier to do with Singularit
 the cluster) we will show how to do it there.
 
 ### Interact with the Software
-If you want an interactive shell to have the python environment active to play around, you can do:
+If you want an interactive shell to have a general interactive environment active to play around, you can do:
 
 ```
 docker run -it vanessa/sherlock:pvacseq shell pvacseq
@@ -158,6 +158,13 @@ root@be61d6e684ab:/scif/apps/pvacseq#
 Since we are running the container in the context of `pvacseq`, the environment has a bunch of variables for the
 scientific filesystem that give hints that it is active. For exanple, `$SCIF_APPDATA` refers to the data root
 for `pvacseq`, and `$SCIF_APPROOT` for where things are installed. Here we can find the example data:
+
+```
+$ ls $SCIF_APPDATA
+example_data  pvactools_cwls  test_output
+```
+
+And peek in...
 
 ```
 $ ls $SCIF_APPDATA/example_data/
@@ -182,10 +189,76 @@ From outside the container:
 
 ```
 docker run -it vanessa/sherlock:pvacseq run mhc_i
+[mhc_i] executing /bin/bash /scif/apps/mhc_i/scif/runscript
+ _______________________________________________________________________________________________________________________
+|***********************************************************************************************************************|
+| * List all available commands.                                                                                        |
+| ./src/predict_binding.py                                                                                              |
+|_______________________________________________________________________________________________________________________|
+| * List all available MHC-I prediction methods.                                                                        |
+| ./src/predict_binding.py method                                                                                       |
+|_______________________________________________________________________________________________________________________|
+| * List all available (MHC,peptide_length) for a given method.                                                         |
+| ./src/predict_binding [method] mhc                                                                                    |
+| Example: ./src/predict_binding.py ann mhc                                                                             |
+|_______________________________________________________________________________________________________________________|
+| * Make predictions given a file containing a list of sequences.                                                       |
+| ./src/predict_binding [method] [mhc] [peptide_length] [input_file]                                                    |
+| Example: ./src/predict_binding.py ann HLA-A*02:01 9 ./examples/input_sequence.fasta                                   |
+|_______________________________________________________________________________________________________________________|
+| * Make predictions given a file containing a list of sequences AND user-provided MHC sequence.                        |
+| ** Only netmhcpan has this option.                                                                                    |
+| ./src/predict_binding [method] -m [input_file_mhc] [peptide_length] [input_file]                                      |
+| Example: ./src/predict_binding.py netmhcpan -m ./examples/protein_mhc_B0702.fasta 9 ./examples/input_sequence.fasta   |
+|_______________________________________________________________________________________________________________________|
+| * You may also redirect (pipe) the input file into the script.                                                        |
+| Examples:                                                                                                             |
+| echo -e ./examples/input_sequence.fasta | ./src/predict_binding.py ann HLA-A*02:01 9                                  |
+| echo -e ./examples/input_sequence.fasta | ./src/predict_binding.py netmhcpan -m ./examples/protein_mhc_B0702.fasta 9  |
+|_______________________________________________________________________________________________________________________|
+```
+```
 docker run -it vanessa/sherlock:pvacseq run mhc_ii
+[mhc_ii] executing /bin/bash /scif/apps/mhc_ii/scif/runscript
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 8.412s
+
+OK
+All prerequisites found!
+run MHCII tests...
 ```
 
-Or inside the container, this is what is going on, for mhc_i
+Note that these are general entry points for each of mch_i and mch_ii, and without arguments they run
+the default tests. You can also issue custom commands by using `exec` to the same entry point:
+
+
+```
+docker run -it vanessa/sherlock:pvacseq exec mhc_ii ls
+[mhc_ii] executing /bin/ls 
+Copenhagen_license.txt
+IEDB_MHC_II-2.17.3.tar.gz
+LIAI_license.txt
+README
+bin
+bio.py
+configure.py
+lib
+logs
+methods
+mhc_II_binding.py
+mhc_II_binding.py.temp
+mhcii_predictor.py
+netMHCII-1.1.readme
+scif
+scratch
+seqpredictorII.py
+test.fasta
+```
+
+And here is what the above looks like, for inside the container. This is mhc_i.
+Note that you are best off testing interactively and then working on the "from the outside"
+commands.
 
 ```
 docker run -it vanessa/sherlock:pvacseq shell mhc_i
