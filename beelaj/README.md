@@ -5,8 +5,7 @@ This is an example of how we can use a Singularity container to compile software
 ## Image Generation
 Generally, you can create the image as follows:
 
-      sudo singularity create --size 2000 peanuts.img
-      sudo singularity bootstrap peanuts.img Singularity
+      sudo singularity build peanuts.img Singularity
 
 
 Or you can create a Github repo with the Singularity file at the base, and connect to [Singularity Hub](https://singularity-hub.org) for it to build for you. Note that this is currently available for Sherlock, because the admins are waiting to update Singularity (with support for the Singularity Hub endpoint) at the next official release, which should be by end of March. Here are the directories created in the image for sherlock, in case you need to bind to share files:

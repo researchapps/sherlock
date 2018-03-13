@@ -5,8 +5,8 @@ This is an example of using a Singularity container to install python (Anaconda 
 ## Image Generation
 Generally, you can create the image as follows:
 
-      sudo singularity create --size 4000 anaconda2.img
-      sudo singularity bootstrap anaconda2.img Singularity
+      sudo singularity build anaconda2.img Singularity.dewsche
+
 
 Or you can create a Github repo with the Singularity file at the base, and connect to [Singularity Hub](https://singularity-hub.org) for it to build for you. Note that this is currently available for Sherlock, because the admins are waiting to update Singularity (with support for the Singularity Hub endpoint) at the next official release, which should be by end of March. Here are the directories created in the image for sherlock, in case you need to bind to share files:
 

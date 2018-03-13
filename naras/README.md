@@ -4,8 +4,7 @@ This script shows how to create a Singularity image with custom packages! After 
 
 To create your image
 
-     sudo singularity create --size 4000 R.img
-     sudo singularity bootstrap R.img Singularity
+     sudo singularity build R.img Singularity.naras
 
 
 Then to run R:
@@ -13,6 +12,5 @@ Then to run R:
     ./R.img
 
 or shell into it to use R/RScript, etc. interactively:
-
 
     singularity shell R.img

@@ -420,5 +420,10 @@ module load system
 module load singularity/2.4
 ```
 
-And then proceed. Again, it's recommended to bring the container onto Sherlock
+And then proceed. Sherlock might have an old version of Singularity that will
+name the images with .img.  Again, it's recommended to bring the container onto Sherlock
 after local development and testing.
+
+```
+singularity pull --name pvacseq.img docker://vanessa/sherlock:pvacseq
+```

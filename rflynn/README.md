@@ -8,8 +8,7 @@ This script shows how to create a Singularity image with custom packages! After 
 
 To create your image
 
-     sudo singularity create --size 6000 rflynn.img
-     sudo singularity bootstrap rflyn.img Singularity
+     sudo singularity build rflynn.img Singularity
 
 
 Then to run an executable inside (all located in `/usr/local/bin` you can do any of the following (the last is likely easiest to remember and do):
@@ -26,4 +25,4 @@ Also look at the `%environment` section - this is where you define variables and
 
 You can also shell into the image to look around. interactively:
 
-    singularity shell R.img
+    singularity shell rflynn.img
