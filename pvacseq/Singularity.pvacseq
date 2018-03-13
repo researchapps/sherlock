@@ -13,32 +13,27 @@ From: continuumio/miniconda3
 %post
 
     # Dependencies for cpanm
-    apt-get update && apt-get install -y build-essential \
-                                         libdbd-mysql-perl \
-                                         libmysqlclient-dev \
-                                         apt-utils \ 
-                                         unzip \
-                                         tcsh \
-                                         gawk \
-                                         vim \
-                                         libxi-dev \ 
-                                         libxmu-dev \ 
-                                         freeglut3-dev \ 
-                                         libgsl0-dev \
-                                         libnetpbm10-dev \
-                                         libplplot-dev \
-                                         gfortran
+    export DEBIAN_FRONTEND=noninteractive    
+    apt-get update && apt-get install -y build-essential
+    apt-get install -y libdbd-mysql-perl \
+                       libmysqlclient-dev \
+                       apt-utils \ 
+                       unzip \
+                       tcsh \
+                       gawk \
+                       vim \
+                       libxi-dev \ 
+                       libxmu-dev \ 
+                       freeglut3-dev \ 
+                       libgsl0-dev \
+                       libnetpbm10-dev \
+                       libplplot-dev \
+                       gfortran
 
-    export DEBIAN_FRONTEND=noninteractive
 
     # Install scif and scif-apps
-    /opt/conda/bin/pip install --upgrade pip
     /opt/conda/bin/pip install scif 
     /opt/conda/bin/scif install /pvacseq.scif
-
-    # Install snakemake
-    /opt/conda/bin/pip install snakemake==4.4.0
-    /opt/conda/bin/pip install docutils==0.14
     
 %runscript
     exec scif "$@"

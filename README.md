@@ -1,5 +1,7 @@
 # Sherlock
 
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/726)
+
 This is a repository for container build files to help users of Sherlock. If you are a user and need help, please submit an issue and we will help you build a container! When you are happy with your container, we recommend that you add the `Singularity` or `Dockerfile` file to a new repo, and build automatically with [Singularity Hub](https://singularity-hub.org) or [Docker Hub](https://hub.docker.com/). Generally, your workflow will look like the following:
 
  - Install Singularity and/or Docker to work locally
