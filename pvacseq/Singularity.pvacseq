@@ -1,39 +1,11 @@
 Bootstrap: docker
-From: continuumio/miniconda3
+From: vanessa/sherlock:pvacseq
 
 # sudo singularity build pvacseq Singularity.pvacseq
-
-%files
-    pvacseq.scif
 
 %environment
     PATH=/opt/conda/bin:$PATH
     export PATH
-
-%post
-
-    # Dependencies for cpanm
-    export DEBIAN_FRONTEND=noninteractive    
-    apt-get update && apt-get install -y build-essential
-    apt-get install -y libdbd-mysql-perl \
-                       libmysqlclient-dev \
-                       apt-utils \ 
-                       unzip \
-                       tcsh \
-                       gawk \
-                       vim \
-                       libxi-dev \ 
-                       libxmu-dev \ 
-                       freeglut3-dev \ 
-                       libgsl0-dev \
-                       libnetpbm10-dev \
-                       libplplot-dev \
-                       gfortran
-
-
-    # Install scif and scif-apps
-    /opt/conda/bin/pip install scif 
-    /opt/conda/bin/scif install /pvacseq.scif
     
 %runscript
     exec scif "$@"
