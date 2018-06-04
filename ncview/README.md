@@ -67,7 +67,7 @@ See the Singularity Documentation for more information on writing recipes.
 
 The NetCDF operators are also available in several containers, [here is an example](https://github.com/lloydcotten/docker-mettools) that I found.
 
-````bash
+```bash
 $ singularity pull --name nco.simg docker://lloydcotten/mettools:v1
 ```
 
