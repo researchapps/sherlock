@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM nvidia/cuda:8.0-devel-ubuntu14.04
 
 # docker build -t vanessa/recurrent_nn .
 
@@ -41,10 +41,11 @@ RUN luarocks install torch
 RUN luarocks install nn
 RUN luarocks install optim
 RUN luarocks install lua-cjson
+RUN luarocks install cutorch
 
 RUN git clone https://github.com/deepmind/torch-hdf5 /opt/torch-hdf5
 WORKDIR /opt/torch-hdf5
 RUN luarocks make hdf5-0-0.rockspec
 
-#Done!
+# Done!
 WORKDIR /opt/torch-rnn
