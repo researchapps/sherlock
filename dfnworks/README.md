@@ -16,8 +16,8 @@ locally.
 
 ```bash
 
-# Pull the pyprophet image
-# See here https://hub.docker.com/r/hroest/pyprophet/
+# Pull the pydfnworks image
+# See here https://hub.docker.com/r/srcc/pydfnworks
 
 singularity pull --name dfnworks.simg docker://srcc/dfnworks
 
@@ -39,7 +39,7 @@ cp /scratch/users/vsochat/share/dfnworks.simg $SINGULARITY_CACHEDIR
 ```
 
 Here is how to load Singularity and interact with the container. Note that the module
-that we want (pyprophet) is installed with the python inside the container:
+that we want (pydfnworks) is installed with the python inside the container:
 
 ```bash
 
@@ -50,14 +50,14 @@ module load singularity
 $ singularity shell dfnworks.simg 
 Singularity: Invoking an interactive shell within container...
 
-Singularity pyprophet.simg:~> which python
+Singularity dfnworks.simg:~> which python
 /usr/bin/python
 
  which ipython
 /usr/local/bin/ipython
 Singularity dfnworks.simg:/scratch/users/vsochat/share> ipython
 
-Singularity pyprophet.simg:~> python
+Singularity dfnworks.simg:~> python
 Python 2.7.3 (default, Dec 18 2014, 19:10:20) 
 [GCC 4.6.3] on linux2
 Type "help", "copyright", "credits" or "license" for more information.
