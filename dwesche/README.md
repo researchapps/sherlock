@@ -1,5 +1,5 @@
 # A Custom Python Environment with Singularity
-y
+
 This is an example of using a Singularity container to install python (Anaconda with 2.7). You can customize this base image to add software or additional python modules that you might need
 
 ## Image Generation

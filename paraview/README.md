@@ -1,4 +1,4 @@
-# A Custom Python Environment with Singularity
+# Paraview on Sherlock
 
 This is an example of using a Singularity container to use Paraview, specifically from [this Docker container](https://hub.docker.com/r/openfoam/openfoam4-paraview50/).
 
