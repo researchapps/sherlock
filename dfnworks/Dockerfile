@@ -5,6 +5,8 @@ FROM ubuntu:16.04
 # Container installs dfnWorks, dependencies, intended for use on Sherlock
 # Author: Alex Miltenberger, Stanford University, ammilten@stanford.edu
 
+MAINTAINER vsochat@stanford.edu
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y python \
