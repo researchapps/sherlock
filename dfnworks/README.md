@@ -7,6 +7,16 @@ was pushed manually, and you can build from this Dockerfile
 $ docker build -t srcc/dfnworks .
 ```
 
+Then the push:
+
+```
+$ docker push srcc/dfnworks
+```
+
+and then pull is shown below! The original script to install dfnworks locally
+(without containers) is provided, [dfnWorksInstallSherlock.sh](dfnWorksInstallSherlock.sh)
+
+
 ## Use on Sherlock
 
 Note that normally you can pull this directly onto Sherlock, but we had problems
