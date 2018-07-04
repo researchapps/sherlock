@@ -104,3 +104,27 @@ Thus, if you want to use mono in the container in a batch job, you would load th
 module load singularity
 singularity exec [container] mono ...
 ```
+
+## Mono with MSAmanda
+Per user request, I've build a custom container with the included [Dockerfile](Dockerfile) to install
+[MSAmanda](http://ms.imp.ac.at/?goto=msamanda) that can be used with Mono. You can run this container directly from
+Docker Hub, both using Docker (on your local machine) or Singularity (on a shared cluster resource). The entrypoint
+to the container is equivalent, and running the container shows the usage:
+
+```bash
+$ docker run -it vanessa/mono
+MS Amanda Stand-Alone version 2.0.0.11219
+Old Usage: MSAmanda.exe spectrumFile proteinDatabase settings.xml [fileformat] [outputfilename]
+New Usage: MSAmanda.exe -s spectrumFile -d proteinDatabase -e settings.xml [-f fileformat] [-o outputfilename]
+Required: -s spectrumFile     single .mgf or .mzml file, or folder with multiple .mgf and .mzml files
+Required: -d proteinDatabase  single .fasta file or folder with multiple .fasta files, which will be combined into one
+Required: -e settings.xml
+Optional: -f fileformat       choose 1 for .csv and 2 for .mzid, default value is 1
+Optional: -o outputfilename   file or folder where the output should be saved, default path is location of spectrum file
+```
+
+Or Singularity
+
+```bash
+singularity pull docker://vanessa/mono
+```
