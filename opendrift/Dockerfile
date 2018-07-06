@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y build-essential \
                                          vim \
                                          git \
                                          gfortran \
+                                         libglu1 \
                                          libgeos-dev \
                                          gdal-bin && \
                                          ldconfig
