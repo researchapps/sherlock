@@ -21,8 +21,14 @@ $ sudo singularity build pynio.simg Singularity
 ```
 
 ## Using the image
-Let's shell inside the image to interact with the software!
+Let's shell inside the image to interact with the software! If you are a stanford affiliate, you
+can copy the image from @vsoch share folder:
 
+```bash
+cp /scratch/users/vsochat/pynio.simg $SCRATCH
+```
+
+If not, you will need to build (shown in previous step) and then transfer to your cluster.
 
 ```bash
 $ singularity shell /scratch/users/vsochat/.singularity/pynio.simg
