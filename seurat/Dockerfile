@@ -11,7 +11,12 @@ RUN apt-get update && apt-get install -y build-essential \
                                          apt-utils \ 
                                          unzip \
                                          vim \
-                                         git
+                                         git \
+                                         libssl-dev \
+                                         libcurl4-openssl-dev
 
 # Updates and Installs
+RUN Rscript -e "install.packages('httr')"
+RUN Rscript -e "install.packages('plotly')"
+RUN Rscript -e "install.packages('hdf5r')"
 RUN Rscript -e "install.packages('Seurat')"

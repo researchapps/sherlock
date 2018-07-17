@@ -51,22 +51,42 @@ For these examples I'll show using one image, and you can choose to use one or b
 
 ```bash
 [vsochat@sh-08-37 ~]$ singularity shell seurat.simg 
+$ singularity shell rstudio-seurat.simg 
 Singularity: Invoking an interactive shell within container...
 
-Singularity seurat.simg:~> which R
-/usr/bin/R
-Singularity seurat.simg:~> R --version
-R version 3.5.0 (2018-04-23) -- "Joy in Playing"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+Singularity rstudio-seurat.simg:/scratch/users/vsochat/share> which R
+/usr/local/bin/R
+
+Singularity rstudio-seurat.simg:/scratch/users/vsochat/share> R
+
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under the terms of the
-GNU General Public License versions 2 or 3.
-For more information about these matters see
-http://www.gnu.org/licenses/.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
 
-Singularity seurat.simg:~> 
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(Seurat)
+Loading required package: ggplot2
+Loading required package: cowplot
+
+Attaching package: ‘cowplot’
+
+The following object is masked from ‘package:ggplot2’:
+
+    ggsave
+
+Loading required package: Matrix
+> 
 ```
 
 Your scratch and home will automatically be bound to the container for you to interact with
@@ -74,9 +94,10 @@ files. To interact with a tool from the "outside" of the container (without shel
 you can use the `exec` command. Note that we have exited from the container above by typing "exit" and we are again on the interactive node. Here are examples of things you might want to do...
 
 ```bash
-singularity exec seurat.simg ls /
-        srv  tmp  var
-boot  environment  home  lib32	libx32	media	  mnt	oak  proc  run	 scratch  singularity  sys  usr
+singularity exec rstudio-seurat.simg ls /
+bin   environment  init   lscratch  mnt  opt   run	share	     sys  var
+boot  etc	   lib	  media     net  proc  sbin	singularity  tmp
+dev   home	   lib64  misc	    oak  root  scratch	srv	     usr
 ```
 
 If you run the container, you go right into R:
@@ -104,11 +125,18 @@ Type 'q()' to quit R.
 > 
 ```
 
+(note that it likely won't work for rstudio, so you would want to exec the command "R" to get the same functionality:
+
+```bash
+singularity exec rstudio-seurat.simg R
+```
+
 Thus, if you want to run a command in a script, you would load the module, and execute commands to the container.
 
 ```
 module load singularity
 singularity exec [container] [commands]
+singularity exec rstudio-seurat.simg Rscript -e "print('Hello Moto')"
 ```
 
 If you are on the Sherlock cluster at Stanford. you can either copy the image I've pulled, or pull your own directly. if you want to customize the image, you will need to learn about
