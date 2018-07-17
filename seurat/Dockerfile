@@ -18,5 +18,6 @@ RUN apt-get update && apt-get install -y build-essential \
 # Updates and Installs
 RUN Rscript -e "install.packages('httr')"
 RUN Rscript -e "install.packages('plotly')"
+RUN apt-get install -y libhdf5-dev
 RUN Rscript -e "install.packages('hdf5r')"
 RUN Rscript -e "install.packages('Seurat')"
