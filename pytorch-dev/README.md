@@ -126,3 +126,9 @@ equivalently onto the Sherlock cluster.
 ```bash
 singularity pull docker://vanessa/pytorch-dev
 ```
+
+You can also grab it from Vanessa:
+
+```bash
+cp /scratch/users/vsochat/vanessa/pytorch-dev.simg $SCRATCH
+```
