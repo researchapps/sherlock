@@ -4,17 +4,7 @@
 container on the Sherlock cluster. We do this via a [Docker Container](https://hub.docker.com/r/weatherlab/ncview/) with the [Singularity Software](https://singularityware.github.io).
 
 We will be using the Docker tag `0.4.1-cuda9-cudnn7-devel` to pull a container with pytorch dev that (should be) ready to go with CUDA libraries installed.
-The user that requested the container also needs these modules, all of which are included with the standard library (and others already
-installed with pytorch).
 
-```bash
-numpy 
-random 
-skimage 
-scipy 
-matplotlib 
-pickle
-```
 
 ## Getting Started 
 
@@ -116,3 +106,23 @@ Bootstrap: docker
 ```
 
 See the Singularity Documentation for more information on writing recipes.
+
+## Custom Container
+A user requested a container with the following (additional) modules, which will be available via
+the Dockerfile in this folder as `docker://vanessa/pytorch-dev`
+
+```bash
+numpy 
+random 
+skimage 
+scipy 
+matplotlib 
+pickle
+```
+
+This is built from the Dockerfile in this repository, pushed to Docker Hub, and then can be pulled
+equivalently onto the Sherlock cluster.
+
+```bash
+singularity pull docker://vanessa/pytorch-dev
+```
