@@ -38,9 +38,12 @@ cp /scratch/users/vsochat/share/pytorch-0.4.1-cuda9-cudnn7-devel.simg $SCRATCH
 
 # Pytorch with python 2.7
 cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
+
+# Pytorch with python 3
+cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
 ```
 
-Then jump down to [Usage](#Usage)
+See the last section for more notes on the latter two (custom builds). Then jump down to [Usage](#Usage)
 
 ### Option 2: Pull the Container
 If you want to try pulling your own container from Docker Hub, just pull it!
@@ -112,7 +115,7 @@ See the Singularity Documentation for more information on writing recipes.
 
 ## Custom Container
 A user requested a container with the following (additional) modules, which will be available via
-the Dockerfile in this folder as `docker://vanessa/pytorch-dev`
+the Dockerfiles in this folder as `docker://vanessa/pytorch-dev` and `docker://vanessa/pytorch-dev:py2.7` (python 3 and 2, respectively) on [Docker Hub](https://hub.docker.com/r/vanessa/pytorch-dev/tags/).
 
 ```bash
 numpy 
