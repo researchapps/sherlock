@@ -37,7 +37,7 @@ by @vsoch.
 cp /scratch/users/vsochat/share/pytorch-0.4.1-cuda9-cudnn7-devel.simg $SCRATCH
 
 # Pytorch with python 2.7
-cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
+cp /scratch/users/vsochat/share/pytorch-dev-py2.7.simg $SCRATCH
 
 # Pytorch with python 3
 cp /scratch/users/vsochat/share/pytorch-dev.simg $SCRATCH
