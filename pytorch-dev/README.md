@@ -142,14 +142,14 @@ You can also grab it from Vanessa:
 
 ```bash
 cp /scratch/users/vsochat/vanessa/pytorch-dev.simg $SCRATCH
-cp /scratch/users/vsochat/vanessa/pytorch-dev-2.7.simg $SCRATCH
+cp /scratch/users/vsochat/vanessa/pytorch-dev-py2.7.simg $SCRATCH
 ```
 
 Here is an example of using the Python 2.7 container, via Singularity:
 
 ```bash
 module load cuda
-singularity shell --nv pytorch-dev-2.7.simg
+singularity shell --nv pytorch-dev-py2.7.simg
 ```
 
 If you are familiar with Docker, you can try this on your host (where you have root) too:
