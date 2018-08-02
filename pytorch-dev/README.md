@@ -33,7 +33,11 @@ by @vsoch.
 
 
 ```bash
-cp /scratch/users/vsochat/share/ pytorch-0.4.1-cuda9-cudnn7-devel.simg $SCRATCH
+# Pytorch with python 3
+cp /scratch/users/vsochat/share/pytorch-0.4.1-cuda9-cudnn7-devel.simg $SCRATCH
+
+# Pytorch with python 2.7
+cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
 ```
 
 Then jump down to [Usage](#Usage)
@@ -77,7 +81,6 @@ import torch
 However, to harness the GPU from the host, you will need to shell into the container (or `exec` a command to it) first loading the CUDA library of your choice, and then using the `--nv` flag (nvidia) for singularity.
 
 ```bash
-
 # What CUDA libraries are available?
 module spider cuda
 
@@ -120,15 +123,44 @@ matplotlib
 pickle
 ```
 
-This is built from the Dockerfile in this repository, pushed to Docker Hub, and then can be pulled
+The Python 3 is built from the [Dockerfile](Dockerfile) in this repository, and Python 2.7 from the 
+[Dockerfile.py2](Dockerfile.py2), respectively. Both are pushed to Docker Hub, and then can be pulled
 equivalently onto the Sherlock cluster.
 
 ```bash
+# Python 3
 singularity pull docker://vanessa/pytorch-dev
+
+# Python 2
+singularity pull docker://vanessa/pytorch-dev:py2.7
 ```
 
 You can also grab it from Vanessa:
 
 ```bash
 cp /scratch/users/vsochat/vanessa/pytorch-dev.simg $SCRATCH
+cp /scratch/users/vsochat/vanessa/pytorch-dev-2.7.simg $SCRATCH
+```
+
+Here is an example of using the Python 2.7 container, via Singularity:
+
+```bash
+module load cuda
+singularity shell --nv pytorch-dev-2.7.simg
+```
+
+If you are familiar with Docker, you can try this on your host (where you have root) too:
+
+```bash
+$ docker run -it vanessa/pytorch-dev:py2.7 bashroot@6242acb908fd:/workspace# which python
+/opt/conda/bin/python
+root@6242acb908fd:/workspace# python --version
+Python 2.7.14 :: Intel Corporation
+root@6242acb908fd:/workspace# python
+Python 2.7.14 |Intel Corporation| (default, May  4 2018, 04:27:35) 
+[GCC 4.8.2 20140120 (Red Hat 4.8.2-15)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+Intel(R) Distribution for Python is brought to you by Intel Corporation.
+Please check out: https://software.intel.com/en-us/python-distribution
+>>> import torch
 ```
