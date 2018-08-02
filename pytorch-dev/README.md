@@ -40,7 +40,7 @@ cp /scratch/users/vsochat/share/pytorch-0.4.1-cuda9-cudnn7-devel.simg $SCRATCH
 cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
 
 # Pytorch with python 3
-cp /scratch/users/vsochat/share/pytorch-dev-2.7.simg $SCRATCH
+cp /scratch/users/vsochat/share/pytorch-dev.simg $SCRATCH
 ```
 
 See the last section for more notes on the latter two (custom builds). Then jump down to [Usage](#Usage)
