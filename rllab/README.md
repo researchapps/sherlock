@@ -1,6 +1,6 @@
 # Rllab: Custom Python Environment with Singularity
 
-This is an example of using a Singularity container to install python (Anaconda with 2.7).
+This is an example of using a Singularity container to install python.
 You can customize this base image to add software or additional python modules that you might need.
 
 ## Build the Image
@@ -59,22 +59,34 @@ $ scp rllab.simg <username>@login.sherlock.stanford.edu:/scratch/users/<username
 The container's entrypoint is python 2, so if you run it, you will get a python 2 shell!
 
 ```bash
-$ singularity run rllab.simg
+$ singularity run rllab.simg 
+Python 2.7.6 (default, Nov 23 2017, 15:49:48) 
+[GCC 4.8.4] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> quit()
 ```
 
-Here is how to execute a command to it (any command!) For example, to check where Python is
-and the version:
+Here is how to execute a command to it (any command!) For example, to list files at the root (/)
 
 ```bash
-
+$ singularity exec rllab.simg ls /
+anaconda2  environment	lib64	  mnt  proc  scratch	  sys
+bin	   etc		lscratch  net  root  share	  tmp
+boot	   home		media	  oak  run   singularity  usr
+dev	   lib		misc	  opt  sbin  srv	  var
 ```
 
+You'll notice in the above that the /scratch (and other sherlock directories)
+are automatically bound in the contianer, cool!
 And here is another option, shell into the container (to get bash first) and then
-start python. And let's import a module!
+interact with python.
 
+```bash
+$ singularity shell rllab.simg 
+Singularity: Invoking an interactive shell within container...
 
-```python
-
+Singularity rllab.simg:/scratch/users/vsochat/share> which python
+/usr/bin/python
 ```
 
 If you need any kind of GPU, aside from being on a GPU node, made sure to add the `--nv` flag to your
