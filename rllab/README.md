@@ -104,3 +104,71 @@ singularity shell --nv rllab.simg
 ```
 
 If you have any questions, please reach out to @vsoch by posting an issue on the issue board!
+
+## Testing with Exo
+
+The [Dockerfile](Dockerfile) here is from [the main repo](https://github.com/rll/rllab/blob/master/docker/Dockerfile) and is [built here](https://hub.docker.com/r/dementrock/rllab3-shared/)
+on Dockerhub.  Here is how I built it, and then pulled to my local machine (and transferred to Sherlock):
+
+```bash
+$ docker build -t vanessa/rllab .
+$ docker push vanessa/rllab
+...
+
+Then pull into Singularity container
+
+
+```bash
+singularity pull docker://vanessa/rllab
+```
+
+Then transfer to Sherlock
+
+```bash
+scp rllab.simg vsochat@login.sherlock.stanford.edu:/scratch/users/vsochat/share/rllab.simg
+```
+
+Then log into sherlock and get an interactive node.
+
+```bash
+sdev
+cd $SCRATCH
+git clone https://github.com/ngeley/Exo-tmp
+cd Exo-temp
+$ echo $PYTHONPATH
+
+```
+Note that `PYTHONPATH` outside the container is unset. Let's shell into the container
+(this might be somewhere else on your `SCRATCH`.
+
+
+```bash
+# Note that their pythonpath just has the rllab root
+$ singularity shell /scratch/users/vsochat/share/rllab.simg 
+Singularity: Invoking an interactive shell within container...
+
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> echo $PYTHONPATH
+/root/code/rllab:
+```
+
+```bash
+# Note that we have the Exo repo still here in the $PWD
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> ls
+50k-seed42-newparams.txt  50k-seed46.txt	     Singularity.rllab	       constants.py	      learn_params.py	  simulator.py
+50k-seed43-newparams.txt  CMAvsTRPO.png		     TRPO_eley.png	       create_python_data.py  matlab_utils.py	  source_setup.py
+50k-seed44-newparams.txt  Exoskeleton progress.docx  TRPO_mo.png	       evaluate.py	      plot_50ks.py	  training-data-1.pkl
+50k-seed45-newparams.txt  Exoskeleton progress.pdf   __pycache__	       exo_env.py	      simulate.py	  trpo_exo.py
+50k-seed46-newparams.txt  README.md		     aal5054_Zhang_SM_data_S1  fit_torques.m	      simulate_states.py  util.py
+```
+```bash
+# Note that the python on the path is the one in the container, conda
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> which python
+/opt/conda/envs/rllab3/bin/python
+```
+
+Now let's do the call that had an error:
+
+```bash
+/opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
+```
+
