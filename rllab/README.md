@@ -107,6 +107,8 @@ If you have any questions, please reach out to @vsoch by posting an issue on the
 
 ## Testing with Exo
 
+### Step 1. Build an updated container
+
 The [Dockerfile](Dockerfile) here is from [the main repo](https://github.com/rll/rllab/blob/master/docker/Dockerfile) and is [built here](https://hub.docker.com/r/dementrock/rllab3-shared/)
 on Dockerhub.  Here is how I built it, and then pulled to my local machine (and transferred to Sherlock):
 
@@ -138,17 +140,31 @@ cd Exo-temp
 $ echo $PYTHONPATH
 
 ```
-Note that `PYTHONPATH` outside the container is unset. Let's shell into the container
-(this might be somewhere else on your `SCRATCH`.
+Note that `PYTHONPATH` outside the container is unset. The python on my path is also
+the standard, vanilla system python
 
+```bash
+$ which python
+/usr/bin/python
+```
+
+### Step 2. Debug the issue
+
+Let's shell into the container
+(this might be somewhere else on your `SCRATCH`.
 
 ```bash
 # Note that their pythonpath just has the rllab root
 $ singularity shell /scratch/users/vsochat/share/rllab.simg 
 Singularity: Invoking an interactive shell within container...
 
+# Python is now in container
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> which python
+/opt/conda/envs/rllab3/bin/python
+
+# And on python path
 Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> echo $PYTHONPATH
-/root/code/rllab:
+/opt/code/rllab:
 ```
 
 ```bash
@@ -160,15 +176,166 @@ Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> ls
 50k-seed45-newparams.txt  Exoskeleton progress.pdf   __pycache__	       exo_env.py	      simulate.py	  trpo_exo.py
 50k-seed46-newparams.txt  README.md		     aal5054_Zhang_SM_data_S1  fit_torques.m	      simulate_states.py  util.py
 ```
+
+and that in /opt/code/rllab we have the rllab repo (where we installed from)
+
 ```bash
-# Note that the python on the path is the one in the container, conda
-Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> which python
-/opt/conda/envs/rllab3/bin/python
+ls /opt/code/rllab
+CHANGELOG.md  README.md  circle.yml  dist    docs	      examples	rllab.egg-info	scripts   tests
+LICENSE       build	 contrib     docker  environment.yml  rllab	sandbox		setup.py  vendor
 ```
 
 Now let's do the call that had an error:
 
 ```bash
 /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
+[cli_0]: write_line error; fd=10 buf=:cmd=init pmi_version=1 pmi_subversion=1
+:
+system msg for write_line failure : Bad file descriptor
+[cli_0]: Unable to write to PMI_fd
+[cli_0]: write_line error; fd=10 buf=:cmd=get_appnum
+:
+system msg for write_line failure : Bad file descriptor
+Fatal error in PMPI_Init_thread: Other MPI error, error stack:
+MPIR_Init_thread(392): 
+MPID_Init(107).......: channel initialization failed
+MPID_Init(389).......: PMI_Get_appnum returned -1
 ```
 
+Reproduced the error! Doing some debugging, we get this error with just about any
+algorithm import from rllab. I decided to look into one, and here is the trace of imports:
+
+```python
+--> from rllab.algos.trpo import TRPO
+--> from rllab.algos.npo import NPO
+--> from rllab.algos.batch_polopt import BatchPolopt
+--> from rllab.sampler.base import BaseSampler
+--> from rllab.misc import special
+```
+ahh and here is the bugger:
+
+```python
+import theano.tensor.nnet
+```
+
+### Step 3. Isolate and address the error
+
+I looked into the Theano source code, and realized there are these `PMI_*`
+variables that can be set for MPI (which I saw when I first saw the error):
+
+```bash
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> env | grep PMI
+PMI_SIZE=1
+PMI_RANK=0
+PMI_JOBID=23434976.0
+PMI_FD=10
+```
+
+Let's disable them :)
+
+```bash
+unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
+```
+
+### Step 4. Try, try Again!
+
+
+```python
+/opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
+ERROR (theano.sandbox.cuda): nvcc compiler not found on $PATH. Check your nvcc installation and try again.
+Fontconfig warning: ignoring C.UTF-8: not a valid language tag
+/opt/conda/envs/rllab3/lib/python3.5/site-packages/theano/tensor/signal/downsample.py:6: UserWarning: downsample module has been moved to the theano.tensor.signal.pool module.
+  "downsample module has been moved to the theano.tensor.signal.pool module.")
+using seed 42
+2018-08-11 02:01:33.186289 UTC | Populating workers...
+2018-08-11 02:01:33.186711 UTC | Populated
+0% [##############################] 100% | ETA: 00:00:00
+Total time elapsed: 00:00:00
+2018-08-11 02:01:33.320479 UTC | itr #0 | fitting baseline...
+2018-08-11 02:01:33.372817 UTC | itr #0 | fitted
+=: Compiling function f_loss
+done in 10.502 seconds
+=: Compiling function constraint
+done in 2.548 seconds
+2018-08-11 02:01:46.432174 UTC | itr #0 | computing loss before
+2018-08-11 02:01:46.432794 UTC | itr #0 | performing update
+2018-08-11 02:01:46.432989 UTC | itr #0 | computing descent direction
+=: Compiling function f_grad
+...
+```
+It ran a hugely long thing after that :) Let's try with loading cuda:
+
+
+Hooray! We didn't load with CUDA, but it's working! Let's leave the container, load cuda,
+and try this bit again. Note that I'm exiting the container AND the sdev node (because 
+I want a gpu)
+
+### Step 5. Cuda' done it with Cuda!
+
+```bash
+# Note I am asking for gpu
+srun --partition gpu --gres gpu:1 --pty bash
+
+# Go to Exo folder again, with our script
+$ cd $SCRATCH/Exo-tmp
+
+# load cuda, etc
+$ module use system
+$ module load singularity
+$ module load cuda
+
+# unset MPI junk
+unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
+```
+
+Ok this is ugly, we need to bind the libraries that we need to the container.
+
+```bash
+# shell into the container WITH --nv flag for nvidia
+$ singularity shell --nv --bind /usr/lib64/nvidia --bind /opt/dell --bind /share/software:/opt/software /scratch/users/vsochat/share/rllab.simg 
+Singularity: Invoking an interactive shell within container...
+
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> 
+```
+And now we need to export the `LD_LIBRARY_PATH` and `PATH` that correspond:
+
+```bash
+export PATH=/usr/lib64/nvidia:/opt/software/user/open/cuda/9.0.176/bin:/opt/software/user/open/cuda/9.0.176/nvvm/bin:/opt/software/user/open/singularity/2.5.2/bin:/opt/software/user/open/libarchive/3.3.2/bin:/opt/software/user/open/xz/5.2.3/bin:/opt/software/user/srcc/bin:$PATH
+export LD_LIBRARY_PATH=/usr/lib64/nvidia:/opt/software/user/open/cuda/9.0.176/lib64:/opt/software/user/open/cuda/9.0.176/nvvm/lib64:/opt/software/user/open/cuda/9.0.176/extras/Debugger/lib64:/opt/software/user/open/cuda/9.0.176/extras/CUPTI/lib64:/opt/software/user/open/singularity/2.5.2/lib:/opt/software/user/open/libarchive/3.3.2/lib:/opt/software/user/open/xz/5.2.3/lib:/opt/software/user/open/zlib/1.2.11/lib:$LD_LIBRARY_PATH
+```
+
+Sanity check we still have the right python?
+
+```bash
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> which python
+/opt/conda/envs/rllab3/bin/python
+```
+
+To summarize, above we just:
+
+ - got a gpu node
+ - changed directory to the Exo-tmp so we have our script
+ - loaded the cuda module
+ - shelled into the container with `--nv` and the libraries we loaded bound to the container
+ - exported the `LD_LIBRARY_PATH` and `PATH` variable to be found!
+
+Now let's run our script.
+
+```bash
+/opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
+Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
+ERROR (theano.sandbox.cuda): Failed to compile cuda_ndarray.cu: libcublas.so.9.0: cannot open shared object file: No such file or directory
+WARNING (theano.sandbox.cuda): CUDA is installed, but device gpu is not available  (error: cuda unavailable)
+/opt/conda/envs/rllab3/lib/python3.5/site-packages/theano/tensor/signal/downsample.py:6: UserWarning: downsample module has been moved to the theano.tensor.signal.pool module.
+  "downsample module has been moved to the theano.tensor.signal.pool module.")
+using seed 42
+2018-08-11 02:49:09.430955 UTC | Populating workers...
+2018-08-11 02:49:09.431332 UTC | Populated
+0% [##############################] 100% | ETA: 00:00:00
+Total time elapsed: 00:00:00
+2018-08-11 02:49:09.561551 UTC | itr #0 | fitting baseline...
+2018-08-11 02:49:09.633191 UTC | itr #0 | fitted
+=: Compiling function f_loss
+```
+
+Well holy damn, that didn't work the first time and now it's working! I'm content with this.
