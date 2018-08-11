@@ -263,10 +263,9 @@ done in 2.548 seconds
 =: Compiling function f_grad
 ...
 ```
-It ran a hugely long thing after that :) Let's try with loading cuda:
+It ran a hugely long thing after that :) 
 
-
-Hooray! We didn't load with CUDA, but it's working! Let's leave the container, load cuda,
+We didn't load with CUDA, but it's working! Let's leave the container, load cuda,
 and try this bit again. Note that I'm exiting the container AND the sdev node (because 
 I want a gpu)
 
