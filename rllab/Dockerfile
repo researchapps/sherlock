@@ -66,4 +66,5 @@ ENV BASH_ENV /opt/.bashrc
 WORKDIR /opt/code
 
 # gpu theanno
-ENV THEANO_FLAGS mode=FAST_RUN,device=gpu,floatX=float32
+ENV THEANO_FLAGS mode=FAST_RUN,device=cuda,floatX=float32
+ENV MKL_THREADING_LAYER GNU

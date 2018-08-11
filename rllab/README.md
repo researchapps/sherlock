@@ -110,30 +110,31 @@ If you have any questions, please reach out to @vsoch by posting an issue on the
 ### Step 1. Build an updated container
 
 The [Dockerfile](Dockerfile) here is from [the main repo](https://github.com/rll/rllab/blob/master/docker/Dockerfile) and is [built here](https://hub.docker.com/r/dementrock/rllab3-shared/)
-on Dockerhub.  Here is how I built it, and then pulled to my local machine (and transferred to Sherlock):
+on Dockerhub.  Note that I have now modified the environment.yml and Dockerfile to
+have updated versions of theano and some added libraries.
+Here is how I built it, and then pulled to my local machine (and transferred to Sherlock):
 
 ```bash
 $ docker build -t vanessa/rllab .
 $ docker push vanessa/rllab
 ```
 
-Then pull into Singularity container
-
+Then pull into Singularity container (and I did this on Sherlock, the bug is fixed!)
 
 ```bash
 singularity pull docker://vanessa/rllab
 ```
 
-Then transfer to Sherlock
+If needed, this is how to transfer a container to Sherlock
 
 ```bash
 scp rllab.simg vsochat@login.sherlock.stanford.edu:/scratch/users/vsochat/share/rllab.simg
 ```
 
-Then log into sherlock and get an interactive node.
+Then log into sherlock and get an interactive node - this is asking for a GPU node because that's what we want to get working:
 
 ```bash
-sdev
+$ srun --partition gpu --gres gpu:1 --pty bash
 cd $SCRATCH
 git clone https://github.com/ngeley/Exo-tmp
 cd Exo-temp
@@ -150,8 +151,9 @@ $ which python
 
 ### Step 2. Debug the issue
 
-Let's shell into the container
-(this might be somewhere else on your `SCRATCH`.
+This was my original debugging of the issue, the container used here is `$SCRATCH/share/rllab-v2.simg`.
+Let's shell into the container (this might be somewhere else on your `SCRATCH`. This was also done on
+a regular (sdev) node.
 
 ```bash
 # Note that their pythonpath just has the rllab root
@@ -289,10 +291,8 @@ $ module use system
 $ module load singularity
 $ module load cudnn
 $ module load cuda
-
-# unset MPI junk
-unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
 ```
+
 Ok this is ugly, we need to bind the libraries that we need to the container.
 
 ```bash
@@ -302,6 +302,12 @@ Singularity: Invoking an interactive shell within container...
 
 Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> 
 ```
+Unset MPI junk
+
+```bash
+unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
+```
+
 And now we need to export the `LD_LIBRARY_PATH` and `PATH` that correspond:
 
 ```bash
