@@ -287,6 +287,7 @@ $ cd $SCRATCH/Exo-tmp
 # load cuda, etc
 $ module use system
 $ module load singularity
+$ module load cudnn
 $ module load cuda
 
 # unset MPI junk
@@ -328,3 +329,8 @@ Now let's run our script.
 ```bash
 /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
 ```
+
+This (unfortunately) just hangs, and using an older cuda (or not using cudnn) spits out an error
+that the version is too new (even with the older). I've opened an issue [here](https://github.com/rll/rllab/issues/244)
+to discuss with the maintainer.
+
