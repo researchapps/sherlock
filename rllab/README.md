@@ -271,6 +271,12 @@ I want a gpu)
 
 ### Step 5. Cuda' done it with Cuda!
 
+**important** you will likely need to also load cudan, when I loaded cudan and cuda I was able to detect GPU, BUT
+the library errored out and said I needed to update theano. SO your task is to figure out the right version of theano
+and cuda. I can then update the container, and I think we should also ask the maintainer WHY the older versions are
+used. Then when we have an answer to this question and a good version of theano to install, we can try try again.
+I'll put my (failed) effort here to get us started.
+
 ```bash
 # Note I am asking for gpu
 srun --partition gpu --gres gpu:1 --pty bash
@@ -286,7 +292,6 @@ $ module load cuda
 # unset MPI junk
 unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
 ```
-
 Ok this is ugly, we need to bind the libraries that we need to the container.
 
 ```bash
@@ -322,19 +327,4 @@ Now let's run our script.
 
 ```bash
 /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
-Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
-ERROR (theano.sandbox.cuda): Failed to compile cuda_ndarray.cu: libcublas.so.9.0: cannot open shared object file: No such file or directory
-WARNING (theano.sandbox.cuda): CUDA is installed, but device gpu is not available  (error: cuda unavailable)
-/opt/conda/envs/rllab3/lib/python3.5/site-packages/theano/tensor/signal/downsample.py:6: UserWarning: downsample module has been moved to the theano.tensor.signal.pool module.
-  "downsample module has been moved to the theano.tensor.signal.pool module.")
-using seed 42
-2018-08-11 02:49:09.430955 UTC | Populating workers...
-2018-08-11 02:49:09.431332 UTC | Populated
-0% [##############################] 100% | ETA: 00:00:00
-Total time elapsed: 00:00:00
-2018-08-11 02:49:09.561551 UTC | itr #0 | fitting baseline...
-2018-08-11 02:49:09.633191 UTC | itr #0 | fitted
-=: Compiling function f_loss
 ```
-
-Well holy damn, that didn't work the first time and now it's working! I'm content with this.
