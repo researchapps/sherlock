@@ -240,7 +240,7 @@ unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
 ### Step 4. Try, try Again!
 
 
-```python
+```bash
 /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
 ERROR (theano.sandbox.cuda): nvcc compiler not found on $PATH. Check your nvcc installation and try again.
 Fontconfig warning: ignoring C.UTF-8: not a valid language tag
