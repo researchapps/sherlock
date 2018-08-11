@@ -115,7 +115,7 @@ on Dockerhub.  Here is how I built it, and then pulled to my local machine (and 
 ```bash
 $ docker build -t vanessa/rllab .
 $ docker push vanessa/rllab
-...
+```
 
 Then pull into Singularity container
 
