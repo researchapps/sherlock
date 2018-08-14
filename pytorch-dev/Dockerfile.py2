@@ -20,6 +20,7 @@ RUN curl -o ~/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda-lat
      /opt/conda/bin/conda config --add channels conda-forge && \
      /opt/conda/bin/conda install -y numpy pyyaml scipy ipython mkl && \
      /opt/conda/bin/conda install -y matplotlib scikit-learn scikit-image && \
+     /opt/conda/bin/conda install -y typing && \
      /opt/conda/bin/conda install -c intel mkl-include && \
      /opt/conda/bin/conda install -c pytorch magma-cuda90 && \
      /opt/conda/bin/conda clean -ya
