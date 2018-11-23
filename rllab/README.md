@@ -311,8 +311,8 @@ unset PMI_FD PMI_SIZE PMI_RANK PMI_JOBID
 And now we need to export the `LD_LIBRARY_PATH` and `PATH` that correspond:
 
 ```bash
-export PATH=/usr/lib64/nvidia:/opt/software/user/open/cuda/9.0.176/bin:/opt/software/user/open/cuda/9.0.176/nvvm/bin:/opt/software/user/open/singularity/2.5.2/bin:/opt/software/user/open/libarchive/3.3.2/bin:/opt/software/user/open/xz/5.2.3/bin:/opt/software/user/srcc/bin:$PATH
-export LD_LIBRARY_PATH=/usr/lib64/nvidia:/opt/software/user/open/cuda/9.0.176/lib64:/opt/software/user/open/cuda/9.0.176/nvvm/lib64:/opt/software/user/open/cuda/9.0.176/extras/Debugger/lib64:/opt/software/user/open/cuda/9.0.176/extras/CUPTI/lib64:/opt/software/user/open/singularity/2.5.2/lib:/opt/software/user/open/libarchive/3.3.2/lib:/opt/software/user/open/xz/5.2.3/lib:/opt/software/user/open/zlib/1.2.11/lib:$LD_LIBRARY_PATH
+export PATH=/usr/lib64/nvidia:/opt/software/user/open/cuda/9.2.148/bin:/opt/software/user/open/cuda/9.2.148/nvvm/bin:/opt/software/user/open/singularity/2.5.2/bin:/opt/software/user/open/libarchive/3.3.2/bin:/opt/software/user/open/xz/5.2.3/bin:/opt/software/user/srcc/bin:$PATH
+export LD_LIBRARY_PATH=/opt/software/user/open/cudnn/7.1.4/lib64::/usr/lib64/nvidia:/opt/software/user/open/cuda/9.2.148/lib64:/opt/software/user/open/cuda/9.2.148/nvvm/lib64:/opt/software/user/open/cuda/9.2.148/extras/Debugger/lib64:/opt/software/user/open/cuda/9.2.148/extras/CUPTI/lib64:/opt/software/user/open/singularity/2.5.2/lib:/opt/software/user/open/libarchive/3.3.2/lib:/opt/software/user/open/xz/5.2.3/lib:/opt/software/user/open/zlib/1.2.11/lib:$LD_LIBRARY_PATH
 ```
 
 Sanity check we still have the right python?
@@ -320,6 +320,9 @@ Sanity check we still have the right python?
 ```bash
 Singularity rllab.simg:/scratch/users/vsochat/Exo-tmp> which python
 /opt/conda/envs/rllab3/bin/python
+
+# Note sure if this is necessary, since we just have one and it's already on the path
+source activate rllab3
 ```
 
 To summarize, above we just:
@@ -333,6 +336,7 @@ To summarize, above we just:
 Now let's run our script.
 
 ```bash
+cd $SCRATCH/Exo-tmp
 /opt/conda/envs/rllab3/bin/python trpo_exo.py -s 42 -t 50000 -l 
 ```
 
