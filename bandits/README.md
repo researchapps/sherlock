@@ -22,7 +22,7 @@ docker push vanessa/jupyter-bandits
 Then to run with forward:
 
 ```bash
-$ bash start.sh singularity-jupyter /scratch/users/<username> docker://vanessa/jupyter-bandits
+$ bash start.sh sherlock/singularity-jupyter /scratch/users/<username> docker://vanessa/jupyter-bandits
 ```
 
 And make sure to change the container name to the one you've specified.
